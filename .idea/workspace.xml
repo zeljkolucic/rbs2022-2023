@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7426b0dd-4e66-4785-9e7e-e97d54a4a898" name="Changes" comment="Attack!">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/persons.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/persons.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/persons.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/persons.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zuehlke/securesoftwaredevelopment/repository/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zuehlke/securesoftwaredevelopment/repository/CommentRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +120,7 @@
       <workItem from="1671518545269" duration="1847000" />
       <workItem from="1671539537289" duration="687000" />
       <workItem from="1671639498870" duration="38000" />
-      <workItem from="1673793693402" duration="8077000" />
+      <workItem from="1673793693402" duration="8166000" />
     </task>
     <task id="LOCAL-00001" summary="Init commit">
       <created>1670698325007</created>
