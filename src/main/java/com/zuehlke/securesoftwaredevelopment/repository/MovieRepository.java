@@ -22,7 +22,6 @@ public class MovieRepository {
     private DataSource dataSource;
 
     public MovieRepository(DataSource dataSource) {
-
         this.dataSource = dataSource;
     }
 
@@ -37,7 +36,7 @@ public class MovieRepository {
                 movieList.add(movie);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.warn("Failed to fetch all existing movies.", e);
         }
         return movieList;
     }
@@ -83,7 +82,7 @@ public class MovieRepository {
                 return movie;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.warn("Failed to fetch movie with movieId " + movieId + ".", e);
         }
 
         return null;
@@ -110,12 +109,12 @@ public class MovieRepository {
                         statement2.setInt(2, genre.getId());
                         statement2.executeUpdate();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        LOG.warn("Failed to insert new genres.", e);
                     }
                 });
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.warn("Failed to insert new movie with title" + movie.getTitle() + ".", e);
         }
         return id;
     }
@@ -133,7 +132,7 @@ public class MovieRepository {
             statement.executeUpdate(query3);
             statement.executeUpdate(query4);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.warn("Failed to delete movie with movieId " + movieId + ".", e);
         }
     }
 

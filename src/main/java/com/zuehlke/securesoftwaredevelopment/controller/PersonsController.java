@@ -56,10 +56,10 @@ public class PersonsController {
 
     @DeleteMapping("/persons/{id}")
     public ResponseEntity<Void> person(@PathVariable int id) throws AccessDeniedException  {
-        boolean hasPermission = SecurityUtil.hasPermission("UPDATE_PERSON");
-        if(!hasPermission) {
+        if(!SecurityUtil.hasPermission("UPDATE_PERSON")) {
             int currentUserId = SecurityUtil.getCurrentUser().getId();
             if(currentUserId != id) {
+                LOG.error("Access denied. User with id " + currentUserId + " does not have the permission to update person details.");
                 throw new AccessDeniedException("Access denied!");
             }
         }
@@ -81,6 +81,7 @@ public class PersonsController {
             int currentUserId = SecurityUtil.getCurrentUser().getId();
             int personId = Integer.parseInt(person.getId());
             if(currentUserId != personId) {
+                LOG.error("Access denied. User with id " + currentUserId + " does not have the permission to update person details.");
                 throw new AccessDeniedException("Access denied!");
             }
         }
