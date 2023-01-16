@@ -36,7 +36,7 @@
         <td th:text="${movie.id}"></td>
         <td th:text="${movie.title}"></td>
         <td th:text="${movie.description}"></td>
-        <td><a th:href="@{/movies(id=${movie.id})}">Details</a></td>
+        <td sec:authorize="hasAuthority('VIEW_MOVIES_LIST')"><a th:href="@{/movies(id=${movie.id})}">Details</a></td>
       </tr>
       </tbody>
     </table>

@@ -60,6 +60,7 @@ public class MoviesController {
     }
 
     @GetMapping("/movies")
+    @PreAuthorize("hasAuthority('VIEW_MOVIES_LIST')")
     public String showMovie(@RequestParam(name = "id", required = false) String id, Model model, Authentication authentication) {
         if (id == null) {
             model.addAttribute("movies", movieRepository.getAll());
