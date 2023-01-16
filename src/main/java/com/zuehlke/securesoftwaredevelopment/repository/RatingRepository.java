@@ -1,5 +1,7 @@
 package com.zuehlke.securesoftwaredevelopment.repository;
 
+import com.zuehlke.securesoftwaredevelopment.config.AuditLogger;
+import com.zuehlke.securesoftwaredevelopment.config.Entity;
 import com.zuehlke.securesoftwaredevelopment.domain.Comment;
 import com.zuehlke.securesoftwaredevelopment.domain.Rating;
 import org.slf4j.Logger;
@@ -33,17 +35,29 @@ public class RatingRepository {
              ResultSet rs = statement.executeQuery(query)
         ) {
             if (rs.next()) {
+                Rating ratingFromDb = new Rating(rs.getInt(1), rs.getInt(2), rs.getInt(3));
                 PreparedStatement preparedStatement = connection.prepareStatement(query2);
                 preparedStatement.setInt(1, rating.getRating());
                 preparedStatement.setInt(2, rating.getMovieId());
                 preparedStatement.setInt(3, rating.getUserId());
                 preparedStatement.executeUpdate();
+                AuditLogger
+                        .getAuditLogger(RatingRepository.class)
+                        .auditChange(new Entity(
+                                "rating.update",
+                                String.valueOf(rating.getMovieId()),
+                                ratingFromDb.toString(),
+                                rating.toString()
+                        ));
             } else {
                 PreparedStatement preparedStatement = connection.prepareStatement(query3);
                 preparedStatement.setInt(1, rating.getMovieId());
                 preparedStatement.setInt(2, rating.getUserId());
                 preparedStatement.setInt(3, rating.getRating());
                 preparedStatement.executeUpdate();
+                AuditLogger
+                        .getAuditLogger(RatingRepository.class)
+                        .audit("Successfully created rating " + rating);
             }
         } catch (SQLException e) {
             LOG.warn("Failed to update rating for movie with movieId" + rating.getMovieId() + ".", e);

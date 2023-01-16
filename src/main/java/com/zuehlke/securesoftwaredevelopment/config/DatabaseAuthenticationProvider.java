@@ -42,6 +42,9 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
         if (success) {
             User user = userRepository.findUser(username);
             List<GrantedAuthority> grantedAuthorities = getGrantedAuthorities(user);
+            AuditLogger
+                    .getAuditLogger(DatabaseAuthenticationProvider.class)
+                    .audit("Successfully logged in user with userId " + user.getId() + ".");
             return new UsernamePasswordAuthenticationToken(user, password, grantedAuthorities);
         }
 
