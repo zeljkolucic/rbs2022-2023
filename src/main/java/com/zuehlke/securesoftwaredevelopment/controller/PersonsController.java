@@ -1,6 +1,7 @@
 package com.zuehlke.securesoftwaredevelopment.controller;
 
 import com.zuehlke.securesoftwaredevelopment.config.AuditLogger;
+import com.zuehlke.securesoftwaredevelopment.config.SecurityUtil;
 import com.zuehlke.securesoftwaredevelopment.domain.Person;
 import com.zuehlke.securesoftwaredevelopment.domain.User;
 import com.zuehlke.securesoftwaredevelopment.repository.PersonRepository;
@@ -45,14 +46,24 @@ public class PersonsController {
 
     @GetMapping("/myprofile")
     @PreAuthorize("hasAuthority('VIEW_MY_PROFILE')")
-    public String self(Model model, Authentication authentication) {
+    public String self(Model model, Authentication authentication, HttpSession session) {
+        String csrfToken = session.getAttribute("CSRF_TOKEN").toString();
+        model.addAttribute("CSRF_TOKEN", csrfToken);
         User user = (User) authentication.getPrincipal();
         model.addAttribute("person", personRepository.get("" + user.getId()));
         return "person";
     }
 
     @DeleteMapping("/persons/{id}")
-    public ResponseEntity<Void> person(@PathVariable int id) {
+    public ResponseEntity<Void> person(@PathVariable int id) throws AccessDeniedException  {
+        boolean hasPermission = SecurityUtil.hasPermission("UPDATE_PERSON");
+        if(!hasPermission) {
+            int currentUserId = SecurityUtil.getCurrentUser().getId();
+            if(currentUserId != id) {
+                throw new AccessDeniedException("Access denied!");
+            }
+        }
+
         personRepository.delete(id);
         userRepository.delete(id);
 
@@ -63,8 +74,17 @@ public class PersonsController {
     public String updatePerson(Person person, HttpSession session, @RequestParam("csrfToken") String csrfToken) throws AccessDeniedException {
         String sessionToken = session.getAttribute("CSRF_TOKEN").toString();
         if(!csrfToken.equals(sessionToken)) {
-            throw new AccessDeniedException("Access forbidden!");
+            throw new AccessDeniedException("Access denied!");
         }
+
+        if(!SecurityUtil.hasPermission("UPDATE_PERSON")) {
+            int currentUserId = SecurityUtil.getCurrentUser().getId();
+            int personId = Integer.parseInt(person.getId());
+            if(currentUserId != personId) {
+                throw new AccessDeniedException("Access denied!");
+            }
+        }
+
         personRepository.update(person);
         return "redirect:/persons/" + person.getId();
     }
